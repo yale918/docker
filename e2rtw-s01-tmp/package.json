@@ -1,0 +1,14 @@
+{
+    "name": "e2rtws01",
+    "version": "1.0.0",
+    "description": "Realtime web application - e2rtws01",
+    "author": "Yale918",
+    "main": "server.js",
+    "scripts":{
+        "start": "node server.js"
+    },
+    "dependencies":{
+        "express": "^4.13.3"    
+    }
+    
+}

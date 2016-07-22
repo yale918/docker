@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/angular.min.js"></script>
+  <script src="lib/mqttws31.js"></script>
+  <script src="lib/Math.uuid.js"></script>
+</head>
+<body ng-controller="myCtrlr">
+  <div ng-init="t_host='localhost';t_port=9001"></div>
+
+  <h1>Mqtt-subscriber</h1>
+  Mqtt Host/Port: <br>
+  <input type="text" ng-model="t_host"><input type="text" ng-model="t_port"> <br> <br>
+  Topic: <br>
+  <input type="text" ng-show="flag_connStat" ng-model="t_topic"> <br> <br>
+  <input type="button" value="subscribe" ng-show="flag_subBtn" ng-click="f_subBtn()">
+  <input type="button" value="unsubscribe" ng-show="flag_connStat" >
+
+
+
+
+  <script>
+  var app = angular.module('myApp',[]);
+  app.controller('myCtrlr',function($scope){
+    $scope.flag_subBtn = true;
+    $scope.flag_connStat = false;
+
+    $scope.f_subBtn = function(){
+      $scope.flag_subBtn = false;
+      $scope.flag_connStat = true;
+    }
+
+
+  });
+  </script>
+</body>
+</html>

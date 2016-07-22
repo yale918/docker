@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/angular.min.js"></script>
+  <script src="lib/mqttws31.js"></script>
+  <script src="lib/Math.uuid.js"></script>
+</head>
+<body ng-controller="myCtrlr">
+  <div ng-init="t_host='localhost';t_port=9001"></div>
+  <h1>Mqtt-publisher</h1>
+  Mqtt Host/Port <br>
+  <input type="text" ng-model="t_host" ><input type="text" ng-model="t_port" > <br>
+  {{t_host}} {{t_port}} <br> <br>
+  Topic: <br>
+  <input type="text" ng-show="flag_connStat" ng-model="t_topic">{{t_topic}} <br>
+  Message: <br>
+  <input type="text" ng-show="flag_connStat" ng-model="t_message">{{t_message}} <br>
+  <input type="button" value="send" ng-show="flag_connStat" ng-click="btn_send()"> <br> <br>
+  <input type="button" value="connect" ng-show="flag_connBtn" ng-click="btn_connect()">
+
+
+  <script>
+    var app = angular.module('myApp',[]);
+    app.controller('myCtrlr',function($scope){
+      var mqtt_host, mqtt_port, mqtt_connection;
+      var topic, message;
+      var mqtt_message;
+      $scope.flag_connStat = false;
+      $scope.flag_connBtn = true;
+
+
+      $scope.btn_connect = function(){
+        mqtt_host = $scope.t_host;
+        mqtt_port = $scope.t_port;
+
+        //alert("hi");
+
+        mqtt_connection = new Paho.MQTT.Client(mqtt_host,Number(mqtt_port),Math.uuid(8, 16));
+
+        mqtt_connection.onConnectionLost = f_connectLost;
+        mqtt_connection.connect({  onSuccess: f_connect($scope)   });
+
+        function f_connectLost(resObj){
+          alert("connect fail");
+          //alert(resObj.errorCode+","+resObj.errorMessage);
+        }
+
+        function f_connect(scope){
+          //alert("connect successful");
+          scope.t_topic='chat1';
+          scope.flag_connStat = true;
+          scope.flag_connBtn = false;
+        }
+      }
+
+
+      $scope.btn_send = function(){
+        topic = $scope.t_topic;
+        message = $scope.t_message;
+        mqtt_message = new Paho.MQTT.Message(message);
+        mqtt_message.destinationName = topic;
+        mqtt_connection.send(mqtt_message);
+      }
+
+
+    });
+  </script>
+</body>
+</html>
